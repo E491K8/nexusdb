@@ -1,0 +1,160 @@
+JSONDatabase Documentation
+
+The JSONDatabase class provides a simple implementation of a JSON-based database system. It allows you to create and manage databases, tables, and perform basic CRUD operations on records.
+
+1. Class Initialization:
+   - JSONDatabase(database_dir)
+     - Initializes the JSONDatabase object with the specified database directory.
+     - Parameters:
+       - database_dir (str): The directory where the databases will be stored.
+
+2. Database Operations:
+   - create_database(database_name)
+     - Creates a new database with the given name.
+     - Parameters:
+       - database_name (str): The name of the database.
+
+   - remove_database(database_name)
+     - Removes the specified database.
+     - Parameters:
+       - database_name (str): The name of the database.
+
+   - backup_database(database_name, backup_file)
+     - Creates a backup of the specified database.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - backup_file (str): The path and name of the backup file.
+
+   - restore_database(backup_file, database_dir)
+     - Restores a database from a backup file.
+     - Parameters:
+       - backup_file (str): The path and name of the backup file.
+       - database_dir (str): The directory where the restored database will be stored.
+
+   - drop_database(database_name)
+     - Drops the entire database and removes all associated files.
+     - Parameters:
+       - database_name (str): The name of the database.
+
+3. Table Operations:
+   - create_table(database_name, table_name)
+     - Creates a new table in the specified database.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+
+   - remove_table(database_name, table_name)
+     - Removes the specified table from the database.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+
+   - get_table(database_name, table_name)
+     - Retrieves the contents of the specified table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+     - Returns:
+       - table (list): The list of records in the table.
+
+   - count_records(database_name, table_name)
+     - Counts the number of records in the specified table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+     - Returns:
+       - count (int): The number of records in the table.
+
+   - aggregate(database_name, table_name, field, operation)
+     - Performs an aggregate operation on the specified field in the table.
+     - Supported operations: 'sum', 'average', 'min', 'max'
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field on which the aggregate operation is performed.
+       - operation (str): The aggregate operation to be performed.
+     - Returns:
+       - result (float or int): The result of the aggregate operation.
+
+   - sort_table(database_name, table_name, field, reverse=False)
+     - Sorts the specified table based on the given field.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field used for sorting.
+       - reverse (bool): Specifies whether to sort in reverse order.
+     - Returns:
+       - sorted_table (list): The sorted table.
+
+   - create_index(database_name, table_name, field)
+     - Creates an index for the specified field in the table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field for which the index is created.
+
+   - create_unique_index(database_name, table_name, field)
+     - Creates a unique index for the specified field in the table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field for which the index is created.
+
+   - get_record(database_name, table_name, record_id)
+     - Retrieves a specific record from the table based on its ID.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - record_id (str): The ID of the record.
+     - Returns:
+       - record (dict): The record matching the ID.
+
+   - get_record_by_index(database_name, table_name, field, value)
+     - Retrieves a record from the table based on the unique index.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field used for the unique index.
+       - value (str): The value to search for in the unique index.
+     - Returns:
+       - record (dict): The record matching the unique index.
+
+4. Record Operations:
+   - insert_record(database_name, table_name, record)
+     - Inserts a new record into the table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - record (dict): The record to be inserted.
+
+   - update_record(database_name, table_name, record_id, updated_fields)
+     - Updates an existing record in the table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - record_id (str): The ID of the record to be updated.
+       - updated_fields (dict): The updated fields and their new values.
+
+   - update_record_by_index(database_name, table_name, field, value, updated_fields)
+     - Updates a record in the table based on the unique index.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field used for the unique index.
+       - value (str): The value to search for in the unique index.
+       - updated_fields (dict): The updated fields and their new values.
+
+   - delete_record(database_name, table_name, record_id)
+     - Deletes a record from the table.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - record_id (str): The ID of the record to be deleted.
+
+   - delete_record_by_index(database_name, table_name, field, value)
+     - Deletes a record from the table based on the unique index.
+     - Parameters:
+       - database_name (str): The name of the database.
+       - table_name (str): The name of the table.
+       - field (str): The field used for the unique index.
+       - value (str): The value to search for in the unique index.
