@@ -27,35 +27,23 @@ Here's a simple example that demonstrates how to use CrypsDB:
 
 ```python
 
-from nexusdb import JSONDatabase
-
-# Initialize the JSONDatabase object
-db = JSONDatabase(database_dir="/path/to/database/directory/")
-
-# Create a new database
-db.create_database("my_database")
-
-# Create a new table in the database
-db.create_table("my_database", "my_table")
-
-# Insert a record into the table
-record = {"id": "1", "name": "John Doe", "age": 25}
-db.insert_record("my_database", "my_table", record)
-
-# Retrieve a record from the table
-retrieved_record = db.get_record("my_database", "my_table", "1")
-print(retrieved_record)
-
-# Update a record in the table
-updated_fields = {"age": 26}
-db.update_record("my_database", "my_table", "1", updated_fields)
-
-# Delete a record from the table
-db.delete_record("my_database", "my_table", "1")
-
-# Remove the table from the database
-db.remove_table("my_database", "my_table")
-
-# Remove the database
-db.remove_database("my_database")
+# Example usage:
+db = JSONDatabase('my_database')
+db.create_collection('my_collection')
+db.insert_document('my_collection', {'name': 'John Doe', 'age': 25})
+db.find_documents('my_collection', {'age': 25})
+db.remove_document('my_collection', 'document_id')
+db.create_user('John Doe', 'john@example.com', 'password123', 'admin')
+db.remove_user('user_id')
+db.block_user('user_id')
+db.revoke_user('user_id')
+db.update_document('my_collection', 'document_id', {'name': 'Jane Doe'})
+db.get_all_documents('my_collection')
+db.count_documents('my_collection')
+db.drop_collection('my_collection')
+db.drop_database()
+db.import_database('path_to_database.zip')
+db.import_collection('my_collection', 'path_to_collection.zip')
+db.export_database('exported_database.zip')
+db.export_collection('my_collection', 'exported_collection.zip')
 
