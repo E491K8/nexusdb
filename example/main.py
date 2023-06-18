@@ -1,49 +1,73 @@
+import requests
 from nexusdb import JSONDatabase
+from datetime import datetime
+import pytz
+import json
 
-# Initialize the JSONDatabase object
-db = JSONDatabase(database_dir="/path/to/database/directory/")
+ist = pytz.timezone('Asia/Kolkata')
+utc_now = datetime.utcnow()
+ist_now = utc_now.replace(tzinfo=pytz.utc).astimezone(ist)
+ist_now_str = ist_now.strftime('%Y-%m-%d %H:%M:%S %Z%z')
 
-# Create a new database
-db.create_database("my_database")
+def users():
+    payload = {
+        "name": "name",
+        "email": "email",
+        "password": "password",
+        "role": "admin"
+    }
+    return payload
+    
+users_data = users()
+db = JSONDatabase('api')
+db.create_collection('requests')
+db.create_user(
+    users_data['name'],
+    users_data['email'],
+    users_data['password'],
+    users_data['role']
+ )
 
-# Create a new table in the database
-db.create_table("my_database", "my_table")
+url = 'http://api.vvfin.in/login'
+protected_uri = "http://api.vvfin.in/protected"
+data = {
+    'email': users_data['email'],
+    'password': users_data['password']
+}
+response = requests.post(url, json=data)
+if response.status_code == 200:
+    response_data = response.json()
+    access_token = response_data.get('access_token')
+    refresh_token = response_data.get('refresh_token')
+    
+    headers = {
+    "Authorization": f"Bearer {access_token}"
+    }
+    
+    protected_response = requests.get(protected_uri, headers=headers)
+    
+    if protected_response.status_code == 200: 
+        data = protected_response.json()
+        
+        def protected_data():
+            protected_uri_data = {
+                "name": data['name'],
+                "email": data['email'],
+                "status": data['status']
+            }
+            return protected_uri_data
+    else:
+        print("Request failed with status code:", response.status_code, "error:", protected_response.json() )
+        
+    protected_data_json = protected_data()
+    db.insert_document( 'requests', {
+        "name": protected_data_json['name'],
+        "email": protected_data_json['email'],
+        "status": protected_data_json['status'],
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "timestamp": ist_now_str
+    } )
+else:
+    print('Request failed with status code:', response.status_code, 'error: ', response.json())
 
-# Insert records into the table
-record1 = {"id": "1", "name": "John Doe", "age": 25}
-record2 = {"id": "2", "name": "Jane Smith", "age": 30}
-record3 = {"id": "3", "name": "Bob Johnson", "age": 35}
-
-db.insert_record("my_database", "my_table", record1)
-db.insert_record("my_database", "my_table", record2)
-db.insert_record("my_database", "my_table", record3)
-
-# Retrieve all records from the table
-all_records = db.get_all_records("my_database", "my_table")
-print("All Records:")
-for record in all_records:
-    print(record)
-
-# Update a record in the table
-updated_fields = {"age": 26}
-db.update_record("my_database", "my_table", "1", updated_fields)
-
-# Retrieve a specific record from the table
-retrieved_record = db.get_record("my_database", "my_table", "1")
-print("Retrieved Record:")
-print(retrieved_record)
-
-# Delete a record from the table
-db.delete_record("my_database", "my_table", "2")
-
-# Retrieve all records after deletion
-all_records = db.get_all_records("my_database", "my_table")
-print("All Records after Deletion:")
-for record in all_records:
-    print(record)
-
-# Remove the table from the database
-db.remove_table("my_database", "my_table")
-
-# Remove the database
-db.remove_database("my_database")
